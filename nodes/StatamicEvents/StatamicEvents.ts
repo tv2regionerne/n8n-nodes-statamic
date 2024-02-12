@@ -27,6 +27,13 @@ export class StatamicEvents implements INodeType {
 				required: true
 			}
 		],
+		requestDefaults: {
+			baseURL: '={{$credentials.domain.replace(new RegExp("/$"), "")}}',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+		},
 		webhooks: [
 			{
 				name: 'default',
