@@ -21,6 +21,13 @@ class StatamicEvents {
                     required: true
                 }
             ],
+            requestDefaults: {
+                baseURL: '={{$credentials.domain.replace(new RegExp("/$"), "")}}',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            },
             webhooks: [
                 {
                     name: 'default',
@@ -44,15 +51,20 @@ class StatamicEvents {
             default: {
                 async checkExists() {
                     const webhookData = this.getWorkflowStaticData('node');
+                    const credentials = await this.getCredentials('StatamicPrivateApi');
                     const webhookUrl = this.getNodeWebhookUrl('default');
                     const options = {
-                        headers: {},
+                        headers: {
+                            Authorization: `Bearer ${credentials.token}`,
+                            'Content-Type': 'application/json',
+                        },
                         method: 'GET',
                         qs: { limit: 10000 },
-                        url: '/statamic-events/handlers',
+                        uri: credentials.domain + '/statamic-events/handlers',
                         json: true,
+                        rejectUnauthorized: false,
                     };
-                    const { data } = await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
+                    const { data } = await this.helpers.request(options);
                     for (const handlers of data) {
                         if (handlers.driver == 'webhook' && handlers.url === webhookUrl) {
                             webhookData.webhookId = handlers.id;
@@ -68,19 +80,27 @@ class StatamicEvents {
                         return false;
                     }
                     const event = this.getNodeParameter('event');
+                    const credentials = await this.getCredentials('StatamicPrivateApi');
                     const options = {
-                        headers: {},
+                        headers: {
+                            Authorization: `Bearer ${credentials.token}`,
+                            'Content-Type': 'application/json',
+                        },
                         method: 'POST',
-                        url: '/statamic-events/handlers',
                         body: {
                             driver: 'webhook',
                             events: event.split(','),
                             title: webhookUrl,
                             url: webhookUrl,
+                            should_queue: true,
+                            authentication_type: 'none',
+                            enabled: true,
                         },
+                        uri: credentials.domain + '/statamic-events/handlers',
                         json: true,
+                        rejectUnauthorized: false,
                     };
-                    const responseData = await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
+                    const responseData = await this.helpers.request(options);
                     if (responseData.data === undefined || responseData.data.id === undefined) {
                         return false;
                     }
@@ -91,13 +111,18 @@ class StatamicEvents {
                     const webhookData = this.getWorkflowStaticData('node');
                     if (webhookData.webhookId !== undefined) {
                         try {
+                            const credentials = await this.getCredentials('StatamicPrivateApi');
                             const options = {
-                                headers: {},
+                                headers: {
+                                    Authorization: `Bearer ${credentials.token}`,
+                                    'Content-Type': 'application/json',
+                                },
                                 method: 'DELETE',
-                                url: '/statamic-events/handlers/' + webhookData.webhookId,
+                                uri: credentials.domain + '/statamic-events/handlers/' + webhookData.webhookId,
                                 json: true,
+                                rejectUnauthorized: false,
                             };
-                            await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
+                            await this.helpers.request(options);
                         }
                         catch (error) {
                             return false;

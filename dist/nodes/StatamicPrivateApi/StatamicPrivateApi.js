@@ -363,9 +363,7 @@ class StatamicPrivateApi {
                         url: url,
                         json: true,
                     };
-                    console.log('Request', options);
                     const responseData = await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
-                    console.log('data', responseData);
                     if (responseData.data === undefined) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), responseData, {
                             message: 'No data got returned',
