@@ -318,14 +318,23 @@ class StatamicPrivateApi {
                     typeOptions: {
                         loadOptionsMethod: 'getCollections',
                     },
+                    displayOptions: {
+                        show: {
+                            resource: [
+                                'collection-entries',
+                            ],
+                        },
+                    },
                 },
                 {
                     displayName: 'Taxonomy',
                     name: 'taxonomy',
                     type: 'string',
-                    required: true,
+                    type: 'options',
                     default: '',
-                    noDataExpression: true,
+                    typeOptions: {
+                        loadOptionsMethod: 'getTaxonomies',
+                    },
                     displayOptions: {
                         show: {
                             resource: [
@@ -374,6 +383,38 @@ class StatamicPrivateApi {
                         returnData.push({
                             name: collection.title,
                             value: collection.handle,
+                        });
+                    }
+                    returnData.sort((a, b) => {
+                        if (a.name < b.name) {
+                            return -1;
+                        }
+                        if (a.name > b.name) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    return returnData;
+                },
+                async getTaxonomies() {
+                    const credentials = await this.getCredentials('StatamicPrivateApi');
+                    const url = credentials.domain + '/taxonomies';
+                    const options = {
+                        method: 'GET',
+                        url: url,
+                        json: true,
+                    };
+                    const responseData = await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
+                    if (responseData.data === undefined) {
+                        throw new n8n_workflow_1.NodeApiError(this.getNode(), responseData, {
+                            message: 'No data got returned',
+                        });
+                    }
+                    const returnData = [];
+                    for (const taxonomy of responseData.data) {
+                        returnData.push({
+                            name: taxonomy.title,
+                            value: taxonomy.handle,
                         });
                     }
                     returnData.sort((a, b) => {

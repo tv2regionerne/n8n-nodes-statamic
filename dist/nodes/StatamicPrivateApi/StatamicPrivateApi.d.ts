@@ -4,6 +4,7 @@ export declare class StatamicPrivateApi implements INodeType {
     methods: {
         loadOptions: {
             getCollections(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]>;
+            getTaxonomies(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]>;
         };
     };
 }
