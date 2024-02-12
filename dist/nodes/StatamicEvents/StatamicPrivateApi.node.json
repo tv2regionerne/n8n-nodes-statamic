@@ -1,5 +1,5 @@
 {
-    "node": "n8n-nodes-base.StatamicPrivateApi",
+    "node": "n8n-nodes-base.StatamicEvents",
     "nodeVersion": "1.0",
     "codexVersion": "1.0",
     "categories": [
@@ -8,12 +8,12 @@
     "resources": {
         "credentialDocumentation": [
             {
-                "url": "https://statamic.com/addons/tv2reg/private-api"
+                "url": "https://statamic.com/addons/tv2reg/events"
             }
         ],
         "primaryDocumentation": [
             {
-                "url": "https://statamic.com/addons/tv2reg/private-api"
+                "url": "https://statamic.com/addons/tv2reg/events"
             }
         ]
     }

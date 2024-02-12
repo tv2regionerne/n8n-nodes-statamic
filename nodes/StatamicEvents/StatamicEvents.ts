@@ -125,7 +125,7 @@ export class StatamicEvents implements INodeType {
 							json: true,
 						};
 
-						await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', option);
+						await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
 					} catch (error) {
 						return false;
 					}

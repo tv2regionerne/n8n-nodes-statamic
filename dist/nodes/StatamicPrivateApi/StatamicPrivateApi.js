@@ -178,7 +178,7 @@ class StatamicPrivateApi {
                             routing: {
                                 request: {
                                     method: 'GET',
-                                    url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries',
+                                    url: '=/collections/{{ $parameter["collection"] }}/entries',
                                 },
                             },
                         },
@@ -190,7 +190,7 @@ class StatamicPrivateApi {
                             routing: {
                                 request: {
                                     method: 'GET',
-                                    url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+                                    url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
                                 },
                             },
                         },
@@ -202,7 +202,7 @@ class StatamicPrivateApi {
                             routing: {
                                 request: {
                                     method: 'POST',
-                                    url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries',
+                                    url: '=/collections/{{ $parameter["collection"] }}/entries',
                                 },
                             },
                         },
@@ -214,7 +214,7 @@ class StatamicPrivateApi {
                             routing: {
                                 request: {
                                     method: 'DELETE',
-                                    url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+                                    url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
                                 },
                             },
                         },
@@ -226,7 +226,7 @@ class StatamicPrivateApi {
                             routing: {
                                 request: {
                                     method: 'PATCH',
-                                    url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+                                    url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
                                 },
                             },
                         },

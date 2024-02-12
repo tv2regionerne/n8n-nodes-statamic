@@ -182,7 +182,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'GET',
-								url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries',
+								url: '=/collections/{{ $parameter["collection"] }}/entries',
 							},
 						},
 					},
@@ -195,7 +195,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'GET',
-								url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+								url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
 							},
 						},
 					},
@@ -208,7 +208,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'POST',
-								url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries',
+								url: '=/collections/{{ $parameter["collection"] }}/entries',
 							},
 						},
 					},
@@ -221,7 +221,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'DELETE',
-								url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+								url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
 							},
 						},
 					},
@@ -234,7 +234,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'PATCH',
-								url: '=/{{ $parameter["resource"] }}/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+								url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
 							},
 						},
 					},
