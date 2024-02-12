@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatamicPrivateApi = void 0;
+const n8n_workflow_1 = require("n8n-workflow");
 class StatamicPrivateApi {
     constructor() {
         this.description = {
@@ -312,16 +313,10 @@ class StatamicPrivateApi {
                 {
                     displayName: 'Collection',
                     name: 'collection',
-                    type: 'string',
-                    required: true,
+                    type: 'options',
                     default: '',
-                    noDataExpression: true,
-                    displayOptions: {
-                        show: {
-                            resource: [
-                                'collection-entries',
-                            ],
-                        },
+                    typeOptions: {
+                        loadOptionsMethod: 'getCollections',
                     },
                 },
                 {
@@ -357,6 +352,44 @@ class StatamicPrivateApi {
                     },
                 },
             ]
+        };
+        this.methods = {
+            loadOptions: {
+                async getCollections() {
+                    const credentials = await this.getCredentials('StatamicPrivateApi');
+                    const url = credentials.domain + '/collections';
+                    const options = {
+                        method: 'GET',
+                        url: url,
+                        json: true,
+                    };
+                    console.log('Request', options);
+                    const responseData = await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
+                    console.log('data', responseData);
+                    if (responseData.data === undefined) {
+                        throw new n8n_workflow_1.NodeApiError(this.getNode(), responseData, {
+                            message: 'No data got returned',
+                        });
+                    }
+                    const returnData = [];
+                    for (const collection of responseData.data) {
+                        returnData.push({
+                            name: collection.title,
+                            value: collection.handle,
+                        });
+                    }
+                    returnData.sort((a, b) => {
+                        if (a.name < b.name) {
+                            return -1;
+                        }
+                        if (a.name > b.name) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    return returnData;
+                }
+            }
         };
     }
 }

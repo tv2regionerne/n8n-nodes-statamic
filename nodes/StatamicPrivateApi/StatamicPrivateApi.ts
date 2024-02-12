@@ -1,4 +1,5 @@
-import { INodeType, INodeTypeDescription } from 'n8n-workflow';
+import { INodeType, INodeTypeDescription, IHttpRequestOptions, ILoadOptionsFunctions, INodePropertyOptions, JsonObject } from 'n8n-workflow';
+import { NodeApiError } from 'n8n-workflow';
 
 export class StatamicPrivateApi implements INodeType {
 	description: INodeTypeDescription = {
@@ -326,16 +327,10 @@ export class StatamicPrivateApi implements INodeType {
 			{
 				displayName: 'Collection',
 				name: 'collection',
-				type: 'string',
-				required: true,
+				type: 'options',
 				default: '',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: [
-							'collection-entries',
-						],
-					},
+				typeOptions: {
+					loadOptionsMethod: 'getCollections',
 				},
 			},
 
@@ -374,4 +369,47 @@ export class StatamicPrivateApi implements INodeType {
 			},
 		]
 	};
+
+	methods = {
+		loadOptions: {
+			async getCollections(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const credentials = await this.getCredentials('StatamicPrivateApi');
+				const url = credentials.domain + '/collections';
+				const options: IHttpRequestOptions = {
+					method: 'GET',
+					url: url,
+					json: true,
+				};
+
+				const responseData = await this.helpers.requestWithAuthentication.call(this, 'StatamicPrivateApi', options);
+
+				if (responseData.data === undefined) {
+					throw new NodeApiError(this.getNode(), responseData as JsonObject, {
+						message: 'No data got returned',
+					});
+				}
+
+				const returnData: INodePropertyOptions[] = [];
+				for (const collection of responseData.data) {
+
+					returnData.push({
+						name: collection.title,
+						value: collection.handle,
+					});
+				}
+
+				returnData.sort((a, b) => {
+					if (a.name < b.name) {
+						return -1;
+					}
+					if (a.name > b.name) {
+						return 1;
+					}
+					return 0;
+				});
+
+				return returnData;
+			}
+		}
+	}
 }
