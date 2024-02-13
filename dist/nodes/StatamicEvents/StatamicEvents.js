@@ -32,7 +32,7 @@ class StatamicEvents {
                 {
                     name: 'default',
                     httpMethod: 'POST',
-                    responseMode: 'onReceived',
+                    responseMode: 'responseNode',
                     path: 'webhook'
                 }
             ],
@@ -44,6 +44,22 @@ class StatamicEvents {
                     default: '',
                     required: true,
                     description: 'The event(s) to subscribe to (eg \Statamic\Events\EntrySaved), comma seperated'
+                },
+                {
+                    displayName: 'Blocking',
+                    name: 'should_queue',
+                    type: 'boolean',
+                    default: true,
+                    required: true,
+                    description: 'Define if the handling is sync or async. Make sure to return fast if it is blocking'
+                },
+                {
+                    displayName: 'Throw Exception On Fail',
+                    name: 'throw_exception_on_fail',
+                    type: 'boolean',
+                    default: true,
+                    required: true,
+                    description: 'Throw an exception in Statamic if the '
                 }
             ],
         };
@@ -76,6 +92,7 @@ class StatamicEvents {
                 async create() {
                     const webhookData = this.getWorkflowStaticData('node');
                     const webhookUrl = this.getNodeWebhookUrl('default');
+                    const node = this.getNode();
                     if (webhookUrl.includes('%20')) {
                         return false;
                     }
@@ -90,8 +107,9 @@ class StatamicEvents {
                         body: {
                             driver: 'webhook',
                             events: event.split(','),
-                            title: webhookUrl,
+                            title: 'N8N ' + node.id,
                             url: webhookUrl,
+                            method: 'post',
                             should_queue: true,
                             authentication_type: 'none',
                             enabled: true,
@@ -138,7 +156,6 @@ class StatamicEvents {
         };
     }
     async webhook() {
-        const bodyData = this.getBodyData();
         const headerData = this.getHeaderData();
         const req = this.getRequestObject();
         const webhookData = this.getWorkflowStaticData('node');
@@ -151,13 +168,8 @@ class StatamicEvents {
                 noWebhookResponse: true,
             };
         }
-        if (bodyData.events === undefined ||
-            !Array.isArray(bodyData.events) ||
-            bodyData.events.length === 0) {
-            return {};
-        }
         return {
-            workflowData: [this.helpers.returnJsonArray(req.body.events)],
+            workflowData: [this.helpers.returnJsonArray(req.body)],
         };
     }
 }

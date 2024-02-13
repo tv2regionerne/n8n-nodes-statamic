@@ -39,7 +39,7 @@ export class StatamicEvents implements INodeType {
 			{
 				name: 'default',
 				httpMethod: 'POST',
-				responseMode: 'onReceived',
+				responseMode: 'responseNode',
 				path: 'webhook'
 			}
 		],
@@ -51,6 +51,22 @@ export class StatamicEvents implements INodeType {
 				default: '',
 				required: true,
 				description: 'The event(s) to subscribe to (eg \Statamic\Events\EntrySaved), comma seperated'
+			},
+			{
+				displayName: 'Blocking',
+				name: 'should_queue',
+				type: 'boolean',
+				default: true,
+				required: true,
+				description: 'Define if the handling is sync or async. Make sure to return fast if it is blocking'
+			},
+			{
+				displayName: 'Throw Exception On Fail',
+				name: 'throw_exception_on_fail',
+				type: 'boolean',
+				default: true,
+				required: true,
+				description: 'Throw an exception in Statamic if the '
 			}
 		],
 	};
@@ -93,6 +109,7 @@ export class StatamicEvents implements INodeType {
 				const webhookData = this.getWorkflowStaticData('node');
 
 				const webhookUrl = this.getNodeWebhookUrl('default') as string;
+				const node = this.getNode();
 
 				if (webhookUrl.includes('%20')) {
 					return false;
@@ -111,11 +128,13 @@ export class StatamicEvents implements INodeType {
 					body: {
 						driver: 'webhook',
 						events: event.split(','),
-						title: webhookUrl,
+						title: 'N8N ' + node.id,
 						url: webhookUrl,
+						method: 'post',
 						should_queue: true,
 						authentication_type: 'none',
 						enabled: true,
+						throw_exception_on_fail: false,
 					},
 					uri: credentials.domain + '/statamic-events/handlers',
 					json: true,
@@ -170,7 +189,7 @@ export class StatamicEvents implements INodeType {
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
-		const bodyData = this.getBodyData();
+		//const bodyData = this.getBodyData();
 		const headerData = this.getHeaderData() as IDataObject;
 		const req = this.getRequestObject();
 
@@ -189,18 +208,18 @@ export class StatamicEvents implements INodeType {
 			};
 		}
 
-		if (
-			bodyData.events === undefined ||
-			!Array.isArray(bodyData.events) ||
-			bodyData.events.length === 0
-		) {
-			// Does not contain any event data so nothing to process so no reason to
-			// start the workflow
-			return {};
-		}
+		// if (
+		// 	bodyData.events === undefined ||
+		// 	!Array.isArray(bodyData.events) ||
+		// 	bodyData.events.length === 0
+		// ) {
+		// 	// Does not contain any event data so nothing to process so no reason to
+		// 	// start the workflow
+		// 	return {};
+		// }
 
 		return {
-			workflowData: [this.helpers.returnJsonArray(req.body.events as IDataObject[])],
+			workflowData: [this.helpers.returnJsonArray(req.body as IDataObject[])],
 		};
 	}
 }
