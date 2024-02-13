@@ -95,6 +95,7 @@ class StatamicEvents {
                             should_queue: true,
                             authentication_type: 'none',
                             enabled: true,
+                            throw_exception_on_fail: false,
                         },
                         uri: credentials.domain + '/statamic-events/handlers',
                         json: true,
