@@ -330,7 +330,7 @@ class StatamicPrivateApi {
                     displayName: 'Taxonomy',
                     name: 'taxonomy',
                     type: 'string',
-                    type: 'options',
+                    required: true,
                     default: '',
                     typeOptions: {
                         loadOptionsMethod: 'getTaxonomies',
@@ -411,10 +411,10 @@ class StatamicPrivateApi {
                         });
                     }
                     const returnData = [];
-                    for (const taxonomy of responseData.data) {
+                    for (const collection of responseData.data) {
                         returnData.push({
-                            name: taxonomy.title,
-                            value: taxonomy.handle,
+                            name: collection.title,
+                            value: collection.handle,
                         });
                     }
                     returnData.sort((a, b) => {
