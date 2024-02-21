@@ -130,6 +130,10 @@ export class StatamicPrivateApi implements INodeType {
 								method: 'POST',
 								url: '=/{{ $parameter["resource"] }}',
 							},
+							send: {
+								type: 'body',
+								property: 'body',
+							},
 						},
 					},
 
@@ -155,6 +159,10 @@ export class StatamicPrivateApi implements INodeType {
 							request: {
 								method: 'PATCH',
 								url: '=/{{ $parameter["resource"] }}/{{ $parameter["id"] }}',
+							},
+							send: {
+								type: 'body',
+								property: 'body',
 							},
 						},
 					},
@@ -211,6 +219,10 @@ export class StatamicPrivateApi implements INodeType {
 								method: 'POST',
 								url: '=/collections/{{ $parameter["collection"] }}/entries',
 							},
+							send: {
+								type: 'body',
+								property: 'body',
+							},
 						},
 					},
 
@@ -236,6 +248,10 @@ export class StatamicPrivateApi implements INodeType {
 							request: {
 								method: 'PATCH',
 								url: '=/collections/{{ $parameter["collection"] }}/entries/{{ $parameter["id"] }}',
+							},
+							send: {
+								type: 'body',
+								property: 'body',
 							},
 						},
 					},
@@ -292,6 +308,10 @@ export class StatamicPrivateApi implements INodeType {
 								method: 'POST',
 								url: '=/{{ $parameter["resource"] }}/{{ $parameter["taxonomy"] }}/terms',
 							},
+							send: {
+								type: 'body',
+								property: 'body',
+							},
 						},
 					},
 
@@ -317,6 +337,10 @@ export class StatamicPrivateApi implements INodeType {
 							request: {
 								method: 'PATCH',
 								url: '=/{{ $parameter["resource"] }}/{{ $parameter["taxonomy"] }}/terms/{{ $parameter["id"] }}',
+							},
+							send: {
+								type: 'body',
+								property: 'body',
 							},
 						},
 					},
