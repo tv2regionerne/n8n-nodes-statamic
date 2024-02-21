@@ -102,7 +102,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'GET',
-								url: '=/{{ $parameter["resource"] }}',
+								url: '=/{{ $parameter["resource"] }}?{{ $parameter["query"] }}',
 							},
 						},
 					},
@@ -183,7 +183,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'GET',
-								url: '=/collections/{{ $parameter["collection"] }}/entries',
+								url: '=/collections/{{ $parameter["collection"] }}/entries?{{ $parameter["query"] }}',
 							},
 						},
 					},
@@ -264,7 +264,7 @@ export class StatamicPrivateApi implements INodeType {
 						routing: {
 							request: {
 								method: 'GET',
-								url: '=/{{ $parameter["resource"] }}/{{ $parameter["taxonomy"] }}/terms',
+								url: '=/{{ $parameter["resource"] }}/{{ $parameter["taxonomy"] }}/terms?{{ $parameter["query"] }}',
 							},
 						},
 					},
@@ -344,7 +344,7 @@ export class StatamicPrivateApi implements INodeType {
 			{
 				displayName: 'Taxonomy',
 				name: 'taxonomy',
-				type: 'string',
+				type: 'options',
 				required: true,
 				default: '',
 				typeOptions: {
@@ -372,6 +372,38 @@ export class StatamicPrivateApi implements INodeType {
 							'show',
 							'patch',
 							'delete',
+						],
+					},
+				},
+			},
+		
+			{
+				displayName: 'Body',
+				name: 'body',
+				type: 'string',
+				default: '',
+				typeOptions: {
+					rows: 4,
+				},
+				displayOptions: {
+					show: {
+						operation: [
+							'post',
+							'patch',
+						],
+					},
+				},
+			},
+			
+			{
+				displayName: 'Query String',
+				name: 'query',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						operation: [
+							'get',
 						],
 					},
 				},
